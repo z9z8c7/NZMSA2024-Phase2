@@ -15,15 +15,16 @@ namespace ReactApp2.Server.Controllers
     public class WeatherForecastController : ControllerBase
     {
         private readonly HttpClient _httpClient;
-        public const string Apikey = "b5ea33ae0d2fc99b9e19b3a38e77a0a3";
+        public string Apikey;
         public const string WeatherURL = "https://api.openweathermap.org/data/2.5/weather";
         
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, HttpClient httpClient)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, HttpClient httpClient, IConfiguration configuration)
         {
             _logger = logger;
             _httpClient = httpClient;
+            Apikey = configuration["WeatherApiKey"];
         }
 
         [HttpGet("current")]
