@@ -1,7 +1,11 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using ReactApp2.Server.Models;
+using ReactApp2.Server.Repositories;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +21,22 @@ builder.Services.AddSwaggerGen( c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Weather API", Version = "v1" });
 });
+
+var connection = String.Empty;
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.json");
+    connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
+}
+else
+{
+    connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
+}
+
+builder.Services.AddDbContext<UserContext>(options =>
+    options.UseSqlServer(connection));
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 
