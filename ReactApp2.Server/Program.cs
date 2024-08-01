@@ -1,7 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using ReactApp2.Server.Models;
 using ReactApp2.Server.Repositories;
@@ -15,6 +12,17 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 builder.Services.AddHttpClient();
+
+// Allow CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("https://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyOrigin(); // For localhost only. Allow all
+    });
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen( c =>
@@ -40,6 +48,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 
+app.UseCors("AllowReactApp");
 app.UseDefaultFiles();
 app.UseStaticFiles();
 

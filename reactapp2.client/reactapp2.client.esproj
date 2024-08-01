@@ -12,5 +12,8 @@
     <Folder Include="src\Components\" />
     <Folder Include="src\Models\" />
     <Folder Include="src\Services\" />
+    <Folder Include="src\api\" />
+    <Folder Include="src\pages\" />
+    <Folder Include="src\styles\" />
   </ItemGroup>
 </Project>
