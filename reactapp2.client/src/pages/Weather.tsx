@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { WeatherData } from '../Models/WeatherData';
 import { getCurrentWeather } from '../api/WeatherService';
-import {  Card, Spin, Alert } from 'antd';
+import { Card, Spin, Alert } from 'antd';
+import clear from '../assets/clear.png';
+import clouds from '../assets/clouds.png';
+import drizzle from '../assets/drizzle.png';
+import rain from '../assets/rain.png';
+import snow from '../assets/snow.png';
+import thunderstorm from '../assets/thunderstorm.png';
+import '../styles/Weather.css';
 
 const Weather: React.FC = () => {
     const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -30,8 +37,36 @@ const Weather: React.FC = () => {
     if (loading) return <Spin tip={loading} fullscreen />;
     if (error) return <Alert message="Error" type="error" description={error} showIcon />;
 
+    const getBackgroundImage = () => {
+        if (!weather) return '';
+        const mainWeather = weather.weather[0].main.toLowerCase();
+        switch (mainWeather) {
+            case 'clear':
+                return clear;
+            case 'clouds':
+                return clouds;
+            case 'rain':
+                return rain;
+            case 'thunderstorm':
+                return thunderstorm;
+            case 'snow':
+                return snow;
+            case 'drizzle':
+                return drizzle;
+            default:
+                return clear;
+        }
+    };
+
+    const cardstyle = { 
+        backgroundImage: `url(${getBackgroundImage()})`,
+        backgroundSize: 'cover',
+        color: 'white',
+        textShadow: '1px 1px 2px black'
+    }
+
     return (
-        <Card title="Weather in WGN" className="weather-card" hoverable>
+        <Card title="Weather in WGN" className="weather-card" hoverable style={cardstyle}>
             {weather && (
                 <div className="weather-info">
                     <p>Temperature: {weather.main.temp}&#8451;</p>

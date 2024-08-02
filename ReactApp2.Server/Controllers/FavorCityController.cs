@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ReactApp2.Server.Models;
-using ReactApp2.Server.Services;
+using ReactApp2.Server.Repositories;
 
 namespace ReactApp2.Server.Controllers
 {
@@ -8,50 +8,52 @@ namespace ReactApp2.Server.Controllers
     [ApiController]
     public class FavorCityController : ControllerBase
     {
+        private readonly FavorCityRepository _favoriteCityRepository;
+
+        public FavorCityController(FavorCityRepository favoriteCityRepository)
+        {
+            _favoriteCityRepository = favoriteCityRepository;
+        }
+
         // GET: api/<FavorCityController>
         [HttpGet]
-        public ActionResult<List<FavorCity>> GetAll() =>
-            UserCityService.GetAll();
+        public async Task<ActionResult<IEnumerable<FavorCity>>> GetAllFavorCities()
+        {
+            var cities = await _favoriteCityRepository.GetAllFavorCities();
+            return Ok(cities);
+        }
 
         // GET api/<FavorCityController>/5
         [HttpGet("{id}")]
-        public ActionResult<FavorCity> Get(int id)
+        public async Task<ActionResult<FavorCity>> GetFavorCityById(int id)
         {
-            var city = UserCityService.Get(id);
+            var city = await _favoriteCityRepository.GetFavorCityById(id);
             if (city == null)
                 return NotFound();
-            return city;
+            return Ok(city);
         }
 
         // POST api/<FavorCityController>
         [HttpPost]
-        public IActionResult Post([FromBody] FavorCity newcity)
+        public async Task<ActionResult<FavorCity>> AddFavorCity([FromBody] FavorCity newcity)
         {
-            UserCityService.Add(newcity);
-            return CreatedAtAction(nameof(Get), new { userid = newcity.UserId }, newcity);
+            if (newcity == null)
+                return BadRequest();
+
+            await _favoriteCityRepository.AddFavorCity(newcity);
+            return CreatedAtAction(nameof(GetFavorCityById), new {id = newcity.Id}, newcity);
         }
 
-        // PUT api/<FavorCityController>/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] FavorCity city)
-        {
-            if (id != city.Id)
-                return BadRequest();
-            var existingcity = UserCityService.Get(id);
-            if (existingcity is null)
-                return NotFound();
-            UserCityService.Update(city);
-            return NoContent();
-        }
 
         // DELETE api/<FavorCityController>/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var city = UserCityService.Get(id);
-            if(city is null)
+            var cityexists = await _favoriteCityRepository.FavorCityExists(id);
+            if (!cityexists)
                 return NotFound();
-            UserCityService.Delete(id);
+
+            await _favoriteCityRepository.DeleteFavorCity(id);
             return NoContent();
         }
     }
