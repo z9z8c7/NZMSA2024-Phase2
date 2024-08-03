@@ -8,9 +8,9 @@ namespace ReactApp2.Server.Controllers
     [ApiController]
     public class FavorCityController : ControllerBase
     {
-        private readonly FavorCityRepository _favoriteCityRepository;
+        private readonly IFavorCityRepository _favoriteCityRepository;
 
-        public FavorCityController(FavorCityRepository favoriteCityRepository)
+        public FavorCityController(IFavorCityRepository favoriteCityRepository)
         {
             _favoriteCityRepository = favoriteCityRepository;
         }

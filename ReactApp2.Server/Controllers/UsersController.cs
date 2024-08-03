@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ReactApp2.Server.Models;
 using ReactApp2.Server.Repositories;
 

@@ -13,7 +13,6 @@ namespace ReactApp2.Server.Models
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<FavorCity>().ToTable("Favorcity", schema: "dbo");
 
-            modelBuilder.Entity<FavorCity>().Property(u => u.UserId).HasColumnName("Userid");
             modelBuilder.Entity<FavorCity>().Property(u => u.Id).HasColumnName("Id");
             modelBuilder.Entity<FavorCity>().Property(u => u.City).HasColumnName("City");
             modelBuilder.Entity<FavorCity>().Property(u => u.Country).HasColumnName("Country");

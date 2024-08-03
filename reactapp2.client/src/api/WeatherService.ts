@@ -1,4 +1,5 @@
-import { WeatherData} from '../Models/WeatherData';
+import { WeatherData } from '../Models/WeatherData';
+import { FavorCity } from '../Models/FavorCity';
 
 const Weatherapi = 'http://localhost:5297/WeatherForecast/current?';
 
@@ -15,3 +16,8 @@ export const getCurrentWeather = async (city: string, country: string): Promise<
         throw error;
     }
 }
+
+export const getWeatherForCities = async (cities: FavorCity[]): Promise<WeatherData[]> => {
+    const weatherDataPromises = cities.map(city => getCurrentWeather(city.city, city.country));
+    return Promise.all(weatherDataPromises);
+};

@@ -20,6 +20,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("https://localhost:5173")
             .AllowAnyHeader()
+            .AllowAnyMethod()
             .AllowAnyOrigin(); // For localhost only. Allow all
     });
 });
@@ -45,6 +46,10 @@ builder.Services.AddDbContext<UserContext>(options =>
     options.UseSqlServer(connection));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddDbContext<FavorCityContext>(options =>
+    options.UseSqlServer(connection));
+builder.Services.AddScoped<IFavorCityRepository, FavorCityRepository>();
 
 var app = builder.Build();
 
